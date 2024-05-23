@@ -1,0 +1,32 @@
+/* static/css/main.css */
+body {
+  background-color: #f8f9fa;
+  color: #343a40;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-top: 20px;
+}
+
+p {
+  text-align: center;
+  font-size: 1.25rem;
+  margin-top: 10px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  font-size: 1.5em;
+  color: #333;
+}

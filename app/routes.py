@@ -29,11 +29,6 @@ def index():
     return render_template("index.html")
 
 
-@main.route("/upload-image")
-def upload_image():
-    return render_template("upload.html")
-
-
 @main.route("/tmp/<filename>")
 def get_tmp_file(filename):
     file_path = os.path.join("static/tmp", filename)
@@ -79,12 +74,12 @@ def upload_and_generate():
     print(f"generate_html_by_image_file sucessfully, page file name: {page_file_name}")
 
     host = "http://127.0.0.1:5000"
-    page_link = f"{host}/tmp/{page_file_name}"
+    page_url = f"{host}/tmp/{page_file_name}"
     return (
         jsonify(
             {
-                "message": "File successfully uploaded",
-                "page_link": page_link,
+                "message": "Url generated successfully",
+                "pageUrl": page_url,
             }
         ),
         200,

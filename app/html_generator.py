@@ -2,6 +2,7 @@ from flask import current_app
 import datetime
 import random
 import string
+import time
 
 
 def generate_unique_id():
@@ -26,13 +27,16 @@ def clean_html_tags(text):
 
 
 def generate_html_by_image_file(image_path: str) -> None:
+    # for test
+    # time.sleep(2)
+    # return "20240520093158818673_WqXGnqIM.html"
     client = current_app.poe_client
 
     bot = "Gemini-1.5-Flash"
     # message = "What is reverse engineering?"
     # message = "Generate a single HTML file from the provided image. The output should include all necessary dynamic information, such as CSS styles, embedded directly within the HTML file. Ensure that the final HTML file is fully self-contained and does not rely on external files or JavaScript."
     message = """
-    Generate a single HTML file based on the provided image. The output should meet the following criteria:
+    Clear the context of this chat session, generate a single HTML file based on the provided image. The output should meet the following criteria:
     - Include all necessary CSS within the HTML file (no external CSS files).
     - Do not include any JavaScript.
     - Ensure the HTML and CSS are properly formatted and structured.
