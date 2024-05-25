@@ -3,6 +3,8 @@ from flask import Flask
 from dotenv import load_dotenv
 import os
 from poe_api_wrapper import PoeApi
+from werkzeug.middleware.proxy_fix import ProxyFix
+from .tools import limiter
 
 
 def create_app():
@@ -13,6 +15,11 @@ def create_app():
 
     # set the maximum file size
     app.config["MAX_CONTENT_LENGTH"] = 4 * 1000 * 1000
+
+    # limiter setting
+    # get the client's IP address from the X-Forwarded-For header
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)
+    limiter.init_app(app)
 
     # Register Blueprints or other application components
     from .routes import main as main_blueprint

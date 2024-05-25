@@ -12,10 +12,9 @@ from flask import (
 import os
 from .html_generator import generate_html_by_image_file, generate_unique_id
 from werkzeug.utils import secure_filename
-
+from .tools import limiter
 
 main = Blueprint("main", __name__)
-
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 
@@ -36,6 +35,7 @@ def get_tmp_file(filename):
 
 
 @main.route("/upload-and-generate", methods=["POST"])
+@limiter.limit("3/second")
 def upload_and_generate():
     if "file" not in request.files:
         return jsonify({"error": "No image part in the request"}), 400
