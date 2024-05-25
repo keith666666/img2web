@@ -84,3 +84,9 @@ def upload_and_generate():
         ),
         200,
     )
+
+
+@main.route("/robots.txt")
+def static_from_root():
+    file_path = os.path.join(current_app.static_folder, request.path[1:])
+    return send_file(file_path)
