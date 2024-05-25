@@ -1,3 +1,6 @@
+const MAX_FILE_SIZE = 4 * 1024 * 1024; // 4 MB
+const MAX_FILE_SIZE_MB = MAX_FILE_SIZE / (1024 * 1024); // Convert to MB
+
 document.addEventListener("alpine:init", () => {
   Alpine.data("updateAndGenerate", () => ({
     isUploading: false,
@@ -10,6 +13,12 @@ document.addEventListener("alpine:init", () => {
       // Check if a file has been selected
       if (!formData.has("file") || formData.get("file").size === 0) {
         alert("Please select a file to upload.");
+        return;
+      }
+      if (formData.get("file").size > MAX_FILE_SIZE) {
+        alert(
+          `File is too large. Maximum allowed size is ${MAX_FILE_SIZE_MB} MB.`
+        );
         return;
       }
 

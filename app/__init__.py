@@ -10,8 +10,9 @@ def create_app():
     load_dotenv()
 
     app = Flask(__name__)
-    app.config["POE_P_B"] = os.getenv("POE_P_B", "")
-    app.config["POE_P_LAT"] = os.getenv("POE_P_LAT", "")
+
+    # set the maximum file size
+    app.config["MAX_CONTENT_LENGTH"] = 4 * 1000 * 1000
 
     # Register Blueprints or other application components
     from .routes import main as main_blueprint
@@ -19,6 +20,8 @@ def create_app():
     app.register_blueprint(main_blueprint)
 
     # Initialize PoeApi
+    app.config["POE_P_B"] = os.getenv("POE_P_B", "")
+    app.config["POE_P_LAT"] = os.getenv("POE_P_LAT", "")
     # for dev
     proxy_context = [
         {"https": "http://127.0.0.1:7890", "http": "http://127.0.0.1:7890"},
