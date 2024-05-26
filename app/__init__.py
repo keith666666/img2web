@@ -8,9 +8,6 @@ from .tools import limiter
 
 
 def create_app():
-    # Load environment variables from .env file
-    load_dotenv()
-
     app = Flask(__name__)
 
     # set the maximum file size
@@ -30,13 +27,13 @@ def create_app():
     app.config["POE_P_B"] = os.getenv("POE_P_B", "")
     app.config["POE_P_LAT"] = os.getenv("POE_P_LAT", "")
     # for dev
-    proxy_context = [
-        {"https": "http://127.0.0.1:7890", "http": "http://127.0.0.1:7890"},
-    ]
+    # proxy_context = [
+    #     {"https": "http://127.0.0.1:7890", "http": "http://127.0.0.1:7890"},
+    # ]
     tokens = {"b": app.config["POE_P_B"], "lat": app.config["POE_P_LAT"]}
-    app.poe_client = PoeApi(cookie=tokens, proxy=proxy_context)
+    # app.poe_client = PoeApi(cookie=tokens, proxy=proxy_context)
     # for production
-    # app.poe_client=PoeApi(cookie=tokens)
+    app.poe_client = PoeApi(cookie=tokens)
 
     # Specify the directory to save uploaded images
     UPLOAD_FOLDER = "app/static/uploads"
