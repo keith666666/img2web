@@ -69,12 +69,11 @@ def upload_and_generate():
         f"File successfully uploaded, new file path: {new_file_path}, try to generate html file..."
     )
 
-    page_file_name = generate_html_by_image_file(new_file_path)
+    page_file_name = generate_html_by_image_file(new_file_path, content_type)
 
     print(f"generate_html_by_image_file sucessfully, page file name: {page_file_name}")
 
-    host = "http://127.0.0.1:5000"
-    page_url = f"{host}/tmp/{page_file_name}"
+    page_url = f"https://{current_app.config['DOMAIN']}/tmp/{page_file_name}"
     return (
         jsonify(
             {

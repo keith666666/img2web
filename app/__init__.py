@@ -1,8 +1,6 @@
 # app/__init__.py
 from flask import Flask
-from dotenv import load_dotenv
 import os
-from poe_api_wrapper import PoeApi
 from werkzeug.middleware.proxy_fix import ProxyFix
 from .tools import limiter
 
@@ -23,18 +21,10 @@ def create_app():
 
     app.register_blueprint(main_blueprint)
 
-    # Initialize PoeApi
-    app.config["POE_P_B"] = os.getenv("POE_P_B", "")
-    app.config["POE_P_LAT"] = os.getenv("POE_P_LAT", "")
-    # for dev
-    # proxy_context = [
-    #     {"https": "http://127.0.0.1:7890", "http": "http://127.0.0.1:7890"},
-    # ]
-    tokens = {"b": app.config["POE_P_B"], "lat": app.config["POE_P_LAT"]}
-    # app.poe_client = PoeApi(cookie=tokens, proxy=proxy_context)
-    # for production
-    app.poe_client = PoeApi(cookie=tokens)
+    # Bind environment variables
+    app.config["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY", "")
 
+    app.config["DOMAIN"] = "imagetowebsite.dev"
     # Specify the directory to save uploaded images
     UPLOAD_FOLDER = "app/static/uploads"
     if not os.path.exists(UPLOAD_FOLDER):

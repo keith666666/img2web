@@ -3,6 +3,8 @@ import datetime
 import random
 import string
 import time
+import pathlib
+import google.generativeai as genai
 
 
 def generate_unique_id():
@@ -26,16 +28,18 @@ def clean_html_tags(text):
     return text
 
 
-def generate_html_by_image_file(image_path: str) -> None:
+def generate_html_by_image_file(image_path: str, content_type: str) -> None:
     # for test
     # time.sleep(2)
     # return "20240520093158818673_WqXGnqIM.html"
-    client = current_app.poe_client
 
     bot = "Gemini-1.5-Flash"
     # message = "What is reverse engineering?"
     # message = "Generate a single HTML file from the provided image. The output should include all necessary dynamic information, such as CSS styles, embedded directly within the HTML file. Ensure that the final HTML file is fully self-contained and does not rely on external files or JavaScript."
-    message = """
+
+    genai.configure(api_key=current_app.config["GOOGLE_API_KEY"])
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    prompt = """
     Clear the context of this chat session, generate a single HTML file based on the provided image. The output should meet the following criteria:
     - Include all necessary CSS within the HTML file (no external CSS files).
     - Do not include any JavaScript.
@@ -44,33 +48,23 @@ def generate_html_by_image_file(image_path: str) -> None:
     Provide the complete code for the HTML file below:
     """
 
-    proxy_context = [
-        {"https": "http://127.0.0.1:7890", "http": "http://127.0.0.1:7890"},
-    ]
-    tokens = {
-        "b": "OUeVasgsO2ctdGBNzhHm9A%3D%3D",
-        "lat": "s8T5V6Wj6AAYvfqNdHGVpfzJSaslOGi7hN1OUpmuPw%3D%3D",
-    }
-    # for local usage
-    # client=PoeApi(cookie=tokens, proxy=proxy_context)
-
-    local_paths = [image_path]
-    msgPrice = 25
-    chatCode = "2balll258t5o4bkt0o3"
     file_name = generate_unique_id() + ".html"
     file_path = f'{current_app.config["TMP_FOLDER"]}/{file_name}'
+    img = {
+        "mime_type": content_type,
+        "data": pathlib.Path(image_path).read_bytes(),
+    }
+    response = model.generate_content(
+        [
+            prompt,
+            img,
+        ],
+        stream=True,
+    )
 
     with open(file_path, "w", encoding="utf-8") as file:
-        # Iterate over the chunks of data
-        for chunk in client.send_message(
-            bot, message, chatCode=chatCode, msgPrice=msgPrice, file_path=local_paths
-        ):
-            # Get the response part of the chunk
-            response = chunk["response"]
-            # Clean the response to remove leading and trailing 'html' markers
-            cleaned_response = clean_html_tags(response)
-            # Write the cleaned response to the file
-            file.write(cleaned_response)
-            # Optionally, print to console if needed
-            # print(cleaned_response, end="", flush=True)
+        for chunk in response:
+            # print(chunk.text)
+            file.write(chunk.text)
+
     return file_name
