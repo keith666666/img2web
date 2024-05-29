@@ -12,7 +12,7 @@ timeout = 120
 graceful_timeout = 30
 
 # Log Level
-loglevel = "info"
+loglevel = "level"
 
 # Paths to log files
 access_log_path = "logs/access.log"  # Change to your desired log file path
@@ -42,3 +42,8 @@ def on_starting(server):
     # Remove default handlers to avoid duplicate logging
     server.log.access_log.propagate = False
     server.log.error_log.propagate = False
+
+
+# Gunicorn Configurations for Logging
+accesslog = access_log_path  # This sets the access log file path for Gunicorn
+errorlog = error_log_path  # This sets the error log file path for Gunicorn

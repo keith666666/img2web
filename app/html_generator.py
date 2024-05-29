@@ -65,6 +65,6 @@ def generate_html_by_image_file(image_path: str, content_type: str) -> None:
     with open(file_path, "w", encoding="utf-8") as file:
         for chunk in response:
             # print(chunk.text)
-            file.write(chunk.text)
+            file.write(clean_html_tags(chunk.text))
 
     return file_name

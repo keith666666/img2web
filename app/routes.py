@@ -58,20 +58,24 @@ def upload_and_generate():
 
     # Create a new file name with the determined extension
     new_file_name = f"{generate_unique_id()}.{file_extension}"
-    print(f"original file name: {file.filename}, new file name: {new_file_name}")
+    current_app.logger.info(
+        f"original file name: {file.filename}, new file name: {new_file_name}"
+    )
 
     UPLOAD_FOLDER = current_app.config["UPLOAD_FOLDER"]
     new_file_path = os.path.join(UPLOAD_FOLDER, new_file_name)
 
     # Save the file with the new file name
     file.save(new_file_path)
-    print(
+    current_app.logger.info(
         f"File successfully uploaded, new file path: {new_file_path}, try to generate html file..."
     )
 
     page_file_name = generate_html_by_image_file(new_file_path, content_type)
 
-    print(f"generate_html_by_image_file sucessfully, page file name: {page_file_name}")
+    current_app.logger.info(
+        f"generate_html_by_image_file sucessfully, page file name: {page_file_name}"
+    )
 
     page_url = f"https://{current_app.config['DOMAIN']}/tmp/{page_file_name}"
     return (
